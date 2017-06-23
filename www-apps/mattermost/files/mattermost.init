@@ -1,0 +1,26 @@
+#!/sbin/openrc-run
+# Copyright 1999-2017 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+command=./mattermost
+pidfile=/var/run/mattermost.pid
+
+depend() {
+	need net
+	use logger dns
+}
+
+start(){
+	ebegin "starting mattermost"
+	cd /srv/mattermost/bin
+	start-stop-daemon --start --quiet --background --exec $command -u mattermost --make-pidfile --pidfile $pidfile
+	eend $?
+}
+
+stop(){
+	ebegin "stopping mattermost"
+	cd /srv/mattermost/bin
+	start-stop-daemon --stop --quiet --exec $command --pidfile $pidfile
+	eend $?
+}
